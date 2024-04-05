@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.ChongwujiyangDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.chongwujiyang_name as chongwujiyangName
+        ,a.chongwujiyang_photo as chongwujiyangPhoto
+        ,a.chongwujiyang_types as chongwujiyangTypes
+        ,a.chongwujiyang_new_money as chongwujiyangNewMoney
+        ,a.chongwujiyang_clicknum as chongwujiyangClicknum
+        ,a.chongwujiyang_content as chongwujiyangContent
+        ,a.chongwujiyang_delete as chongwujiyangDelete
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.ChongwujiyangView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM chongwujiyang  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.chongwujiyangName != '' and params.chongwujiyangName != null and params.chongwujiyangName != 'null' ">
+                and a.chongwujiyang_name like CONCAT('%',#{params.chongwujiyangName},'%')
+            </if>
+            <if test="params.chongwujiyangTypes != null and params.chongwujiyangTypes != ''">
+                and a.chongwujiyang_types = #{params.chongwujiyangTypes}
+            </if>
+            <if test="params.chongwujiyangNewMoneyStart != null ">
+                <![CDATA[  and a.chongwujiyang_new_money >= #{params.chongwujiyangNewMoneyStart}   ]]>
+            </if>
+            <if test="params.chongwujiyangNewMoneyEnd != null ">
+                <![CDATA[  and a.chongwujiyang_new_money <= #{params.chongwujiyangNewMoneyEnd}   ]]>
+            </if>
+            <if test="params.chongwujiyangClicknumStart != null and params.chongwujiyangClicknumStart != ''">
+                <![CDATA[  and a.chongwujiyang_clicknum >= #{params.chongwujiyangClicknumStart}   ]]>
+            </if>
+            <if test="params.chongwujiyangClicknumEnd != null and params.chongwujiyangClicknumEnd != ''">
+                <![CDATA[  and a.chongwujiyang_clicknum <= #{params.chongwujiyangClicknumEnd}   ]]>
+            </if>
+             <if test="params.chongwujiyangClicknum != null and params.chongwujiyangClicknum != ''">
+                and a.chongwujiyang_clicknum = #{params.chongwujiyangClicknum}
+             </if>
+            <if test=" params.chongwujiyangContent != '' and params.chongwujiyangContent != null and params.chongwujiyangContent != 'null' ">
+                and a.chongwujiyang_content like CONCAT('%',#{params.chongwujiyangContent},'%')
+            </if>
+            <if test="params.chongwujiyangDeleteStart != null and params.chongwujiyangDeleteStart != ''">
+                <![CDATA[  and a.chongwujiyang_delete >= #{params.chongwujiyangDeleteStart}   ]]>
+            </if>
+            <if test="params.chongwujiyangDeleteEnd != null and params.chongwujiyangDeleteEnd != ''">
+                <![CDATA[  and a.chongwujiyang_delete <= #{params.chongwujiyangDeleteEnd}   ]]>
+            </if>
+             <if test="params.chongwujiyangDelete != null and params.chongwujiyangDelete != ''">
+                and a.chongwujiyang_delete = #{params.chongwujiyangDelete}
+             </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>

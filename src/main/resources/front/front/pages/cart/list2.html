@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="utf-8">
+    <title>购物车</title>
+    <meta name="keywords" content=""/>
+    <meta name="description" content=""/>
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <link rel="stylesheet" href="../../layui/css/layui.css">
+    <link rel="stylesheet" href="../../xznstatic/css/common.css"/>
+    <link rel="stylesheet" href="../../xznstatic/css/style.css"/>
+    <script type="text/javascript" src="../../xznstatic/js/jquery-1.11.3.min.js"></script>
+    <script type="text/javascript" src="../../xznstatic/js/jquery.SuperSlide.2.1.1.js"></script>
+    <link rel="stylesheet" href="../../xznstatic/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="../../css/theme.css"/>
+</head>
+<style>
+    html::after {
+        position: fixed;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+        content: '';
+        display: block;
+        background-attachment: fixed;
+        background-size: cover;
+        background-position: center;
+    }
+
+
+    /*列表*/
+    .recommend {
+        padding: 10px 0;
+        display: flex;
+        justify-content: center;
+        background-repeat: no-repeat;
+        background-position: center center;
+        background-size: cover;
+    }
+
+    .recommend .box {
+        width: 1002px;
+        margin: 0 auto;
+    }
+
+    .recommend .box .title {
+        padding: 10px 5px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-sizing: border-box;
+    }
+
+    .recommend .box .title span {
+        padding: 0 10px;
+        font-size: 16px;
+        line-height: 1.4;
+    }
+
+    .recommend .box .filter {
+        padding: 0 10px;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .recommend .box .filter .item-list {
+        display: flex;
+        align-items: center;
+    }
+
+    .recommend .box .filter .item-list .lable {
+        font-size: 14px;
+        color: #333;
+        box-sizing: border-box;
+    }
+
+    .recommend .box .filter .item-list input {
+        padding: 0 10px;
+        box-sizing: border-box;
+        outline: none;
+    }
+
+    .recommend .box .filter button {
+        display: flex;
+        padding: 0 10px;
+        box-sizing: border-box;
+        align-items: center;
+        justify-content: center;
+        outline: none;
+    }
+
+    .recommend .box .filter button i {
+        margin-right: 4px;
+    }
+
+    .recommend .box .list {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .recommend .box .list .list-item {
+        flex: 0 0 25%;
+        padding: 0 5px;
+        box-sizing: border-box;
+    }
+
+    .recommend .box .list .list-item .list-item-body {
+        cursor: pointer;
+        border: 1px solid rgba(0, 0, 0, 3);
+        padding: 5px;
+        box-sizing: border-box;
+    }
+
+    .recommend .box .list .list-item-body img {
+        width: 100%;
+        height: 100px;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .recommend .box .list .list-item-body .info {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .recommend .box .list .list-item-body .info .price {
+        padding-top: 5px;
+        color: red;
+        font-size: 14px;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    .recommend .box .list .list-item-body .info .name {
+        padding-top: 5px;
+        color: red;
+        font-size: 14px;
+        text-align: center;
+        box-sizing: border-box;
+    }
+
+    .recommend .box .list .list-item1 {
+        flex: 0 0 100%;
+    }
+
+    .recommend .box .list .list-item2 {
+        flex: 0 0 50%;
+    }
+
+    .recommend .box .list .list-item3 {
+        flex: 0 0 33.3%;
+    }
+    .recommend .box .list .list-item4 {
+          flex: 0 0 25%;
+      }
+
+    .recommend .box .list .list-item5 {
+        flex: 0 0 20%;
+    }
+
+    .recommend .box .news {
+        display: flex;
+        flex-wrap: wrap;
+        padding: 0;
+        width: 100%;
+    }
+
+    .recommend .box .news .list-item {
+        flex: 0 0 50%;
+        padding: 0 10px;
+        box-sizing: border-box;
+    }
+
+    .recommend .box .news .list-item .list-item-body {
+        cursor: pointer;
+        border: 1px solid rgba(0, 0, 0, 3);
+        padding: 10px;
+        box-sizing: border-box;
+        display: flex;
+    }
+
+    .recommend .box .news .list-item .list-item-body img {
+        width: 120px;
+        height: 100%;
+        display: block;
+        margin: 0 auto;
+    }
+
+    .recommend .box .news .list-item .list-item-body .item-info {
+        flex: 1;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        padding-left: 10px;
+        box-sizing: border-box;
+    }
+
+    .recommend .box .news .list-item .list-item-body .item-info .name {
+        padding-top: 5px;
+        color: red;
+        font-size: 14px;
+        box-sizing: border-box;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+    }
+
+    .recommend .box .news .list-item .list-item-body .item-info .time {
+        padding-top: 5px;
+        color: red;
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        box-sizing: border-box;
+    }
+
+    .recommend .box .news .list-item1 {
+        flex: 0 0 100%;
+    }
+
+    .recommend .box .news .list-item3 {
+        flex: 0 0 33.33%;
+    }
+
+
+    /*标题*/
+    .index-title {
+        text-align: center;
+        box-sizing: border-box;
+        width: 980px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .index-title span {
+        padding: 0 10px;
+        line-height: 1.4;
+    }
+
+
+    /*表格 start*/
+    .paper-container {
+        width: 980px;
+        margin: 0 auto;
+        margin-top: 20px;
+        text-align: center;
+    }
+    .paper-container thead {
+        border-radius: 100px;
+    }
+    .paper-container thead tr th {
+        font-size: 16px;
+        font-weight: blod;
+        line-height: 50px;
+        height: 50px;
+        text-align: center;
+    }
+    .paper-container tbody tr td {
+        font-size: 16px;
+        height: 50px;
+        border-bottom: 5px dotted #EEEEEE;
+    }
+    .paper-container thead tr {
+        background-color: rgba(245, 245, 245, 1);
+        color: #000;
+    }
+    .paper-container tbody tr:hover{
+        color: #FFFFFF;
+        background-color: var(--publicMainColor, #808080);
+    }
+    /* 表格 end */
+    /* 按钮及价格 */
+    .btn-container {
+        margin-top: 20px;
+        text-align: right;
+        margin-bottom: 60px;
+        border: 2px dotted #EEEEEE;
+        padding: 20px;
+    }
+    /* 购买数量 start*/
+    .num-picker {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+    }
+    .num-picker button {
+        border: 0;
+        font-size: 20px;
+    }
+    .num-picker input {
+        width: 50px;
+        text-align: center;
+        height: 40px;
+    }</style>
+<body class='bodyClass'>
+<div id="app">
+</div>
+
+<script src="../../xznstatic/js/bootstrap.min.js" type="text/javascript" charset="utf-8"></script>
+<script src="../../layui/layui.js"></script>
+<script src="../../js/vue.js"></script>
+<!-- 引入element组件库 -->
+<script src="../../xznstatic/js/element.min.js"></script>
+<!-- 引入element样式 -->
+<link rel="stylesheet" href="../../xznstatic/css/element.min.css">
+<script src="../../js/config.js"></script>
+<script src="../../modules/config.js"></script>
+<script src="../../js/utils.js"></script>
+
+<script type="text/javascript">
+    Vue.prototype.myFilters = function (msg) {
+        if(msg==null || msg==""){
+            return "";
+        }else if (msg.length>20){
+            msg.replace(/\n/g, "<br>");
+            return msg.substring(0,30)+"......";
+        }else{
+            return msg.replace(/\n/g, "<br>");
+        }
+    };
+    var vue = new Vue({
+        el: '#app',
+        data: {
+            userId: localStorage.getItem("userid"),//当前登录人的id
+            sessionTable: localStorage.getItem("userTable"),//登录账户所在表名
+            role: localStorage.getItem("role"),//权限
+            //小菜单
+            centerMenu: centerMenu,
+            //项目路径
+            baseUrl:"",
+
+            //查询条件
+            searchForm: {
+                page: 1
+                ,limit: 8
+                ,sort: "id"//字段
+                ,order: "desc"//asc desc
+     
+                ,yonghuId: localStorage.getItem('userid')//只能查询自己
+                },
+
+            dataList: [],
+        },
+        filters: {
+            subString: function(val) {
+                if (val) {
+                    val = val.replace(/<[^<>]+>/g, '').replace(/undefined/g, '');
+                    if (val.length > 60) {
+                        val = val.substring(0, 60);
+                        val+='...';
+                    }
+                    return val;
+                }
+                return '';
+            }
+        },
+        computed: {
+            totalZongjiaMoney: function() {
+                var total = 0;
+                for (var item of this.dataList) {
+                    total += item.NewMoney * item.buyNumber
+                }
+                return total;
+            }
+        },
+        methods: {
+            isAuth(tablename, button) {
+                return isFrontAuth(tablename, button);
+            },
+            jump(url) {
+                jump(url);
+            },
+            jumpCheck(url,check1,check2) {
+                if(check1 == "2" || check1 == 2){//级联表的逻辑删除字段[1:未删除 2:已删除]
+                    layui.layer.msg("已经被删除", {
+                        time: 2000,
+                        icon: 2
+                    });
+                    return false;
+                }
+                if(check2 == "2"  || check2 == 2){//是否下架[1:上架 2:下架]
+                    layui.layer.msg("已经下架", {
+                        time: 2000,
+                        icon: 2
+                    });
+                    return false;
+                }
+                this.jump(url);
+            },
+            showContent(content) {alert(content)},
+            deleteData(data){
+                var mymessage = confirm("确定要删除这条数据吗？");
+                if(!mymessage){
+                    alert("已取消操作");
+                    return false;
+                }
+                // 获取商品详情信息
+                layui.http.requestJson(`cart/delete`, 'post', [data.id], (res) => {
+                    if(res.code==0){
+                        layer.msg('删除成功', {
+                            time: 2000,
+                            icon: 6
+                        });
+                        window.location.reload();
+                    }else{
+                        layer.msg(res.msg, {
+                            time: 2000,
+                            icon: 2
+                        });
+                    }
+                });
+            },
+			// 添加数量
+			addCartNum(index) {
+				// 查询对应的商品的详情信息，判断是否有商品限次，库存的判断
+				var item = this.dataList[index];
+				layui.http.request(`chongwuyongpin/info/${item.chongwuyongpinId}`, 'get', {}, function(res) {
+					// 库存限制
+					if (res.data.chongwuyongpinKucunNumber && res.data.chongwuyongpinKucunNumber > 0 && res.data.chongwuyongpinKucunNumber <= item.buyNumber) {
+						layui.layer.msg(`商品库存不足`, {
+							time: 2000,
+							icon: 5
+						});
+						return
+					}
+					item.buyNumber = item.buyNumber + 1;
+					layui.http.requestJson(`cart/update`, 'post', item, function(res) {});
+				});
+			},
+			// 减少数量
+			reduceCartNum(index) {
+				var item = this.dataList[index];
+				if (item.buyNumber > 1) {
+					item.buyNumber = item.buyNumber - 1;
+					layui.http.requestJson(`cart/update`, 'post', item, function(res) {});
+				}
+			},
+			// 删除
+			deleteCart(index) {
+				var item = this.dataList[index];
+				layui.http.requestJson(`cart/delete`, 'post', [item.id], function(res) {
+					window.location.reload();
+				});
+			},
+			// 购买
+			buyClick() {
+			 	if(this.dataList.length<=0){
+                        layui.layer.msg(`您的购物车为空，快去将自己喜欢的商品放入购物车吧！`, {
+                        time: 2000,
+                        icon: 5
+                    });
+                    return false;
+                }
+				localStorage.setItem('s', JSON.stringify(this.dataList));
+				window.location.href = '../Order/confirm.html'
+			},
+        }
+    });
+
+    layui.use(['layer', 'element', 'carousel', 'laypage', 'http', 'jquery', 'laydate', 'tinymce'], function() {
+        var layer = layui.layer;
+        var element = layui.element;
+        var carousel = layui.carousel;
+        var laypage = layui.laypage;
+        var http = layui.http;
+        var laydate = layui.laydate;
+        var tinymce = layui.tinymce;
+        window.jQuery = window.$ = jquery = layui.jquery;
+        vue.baseUrl = http.baseurl
+
+        localStorage.setItem("goUtl","./pages/cart/list2.html")
+
+        // var id = http.getParam('id');
+
+
+        // 获取列表数据
+        http.request('cart/page', 'get', {
+            page: 1,
+            limit: vue.searchForm.limit,
+            yonghuId: localStorage.getItem('userid')
+        }, function(res) {
+            vue.dataList = res.data.list
+            // 分页
+            laypage.render({
+                elem: 'pager',
+                count: res.data.total,
+                limit: vue.searchForm.limit,
+                jump: function(obj, first) {
+                    //首次不执行
+                    if (!first) {
+                        http.request('news/list', 'get', {
+                            page: obj.curr,
+                            limit: obj.limit,
+                            yonghuId: localStorage.getItem('userid')
+                        }, function(res) {
+                            vue.dataList = res.data.list
+                        })
+                    }
+                }
+            });
+        })    });
+
+    window.xznSlide = function () {
+        jQuery(".banner").slide({mainCell: ".bd ul", autoPlay: true, interTime: 5000});
+        jQuery("#ifocus").slide({
+            titCell: "#ifocus_btn li",
+            mainCell: "#ifocus_piclist ul",
+            effect: "leftLoop",
+            delayTime: 200,
+            autoPlay: true,
+            triggerTime: 0
+        });
+        jQuery("#ifocus").slide({titCell: "#ifocus_btn li", mainCell: "#ifocus_tx ul", delayTime: 0, autoPlay: true});
+        jQuery(".product_list").slide({
+            mainCell: ".bd ul",
+            autoPage: true,
+            effect: "leftLoop",
+            autoPlay: true,
+            vis: 5,
+            trigger: "click",
+            interTime: 4000
+        });
+    };
+</script>
+</body>
+</html>

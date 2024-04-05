@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.ChongwurizhiDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.chongwujiyang_yuyue_id as chongwujiyangYuyueId
+        ,a.chongwurizhi_name as chongwurizhiName
+        ,a.chongwurizhi_content as chongwurizhiContent
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.ChongwurizhiView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+        ,chongwujiyangYuyue.yonghu_id as chongwujiyangYuyueYonghuId
+        ,chongwujiyangYuyue.chongwujiyang_yuyue_name as chongwujiyangYuyueName
+        ,chongwujiyangYuyue.chongwu_types as chongwuTypes
+        ,chongwujiyangYuyue.chongwu_zhongliang as chongwuZhongliang
+        ,chongwujiyangYuyue.chongwujiyang_yuyue_time as chongwujiyangYuyueTime
+        ,chongwujiyangYuyue.chongwujiyang_yuyue_num as chongwujiyangYuyueNum
+        ,chongwujiyangYuyue.shifou_types as shifouTypes
+        ,chongwujiyangYuyue.chongwujiyang_yuyue_price as chongwujiyangYuyuePrice
+        ,chongwujiyangYuyue.chongwujiyang_yuyue_yesno_types as chongwujiyangYuyueYesnoTypes
+        ,chongwujiyangYuyue.chongwujiyang_yuyue_yesno_text as chongwujiyangYuyueYesnoText
+
+        FROM chongwurizhi  a
+        left JOIN chongwujiyang_yuyue chongwujiyangYuyue ON a.chongwujiyang_yuyue_id = chongwujiyangYuyue.id
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test="params.chongwujiyangYuyueId != null and params.chongwujiyangYuyueId != ''">
+                and (
+                    a.chongwujiyang_yuyue_id = #{params.chongwujiyangYuyueId}
+                )
+            </if>
+            <if test=" params.chongwurizhiName != '' and params.chongwurizhiName != null and params.chongwurizhiName != 'null' ">
+                and a.chongwurizhi_name like CONCAT('%',#{params.chongwurizhiName},'%')
+            </if>
+            <if test=" params.chongwurizhiContent != '' and params.chongwurizhiContent != null and params.chongwurizhiContent != 'null' ">
+                and a.chongwurizhi_content like CONCAT('%',#{params.chongwurizhiContent},'%')
+            </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+
+                <!-- 判断宠物寄养订单的id不为空 -->
+            <if test=" params.chongwujiyangYuyueIdNotNull != '' and params.chongwujiyangYuyueIdNotNull != null and params.chongwujiyangYuyueIdNotNull != 'null' ">
+                and a.chongwujiyang_yuyue_id IS NOT NULL
+            </if>
+            <if test="params.chongwujiyangId != null  and params.chongwujiyangId != ''">
+                and chongwujiyangYuyue.chongwujiyang_id = #{params.chongwujiyangId}
+            </if>
+            <if test="params.yonghuId != null  and params.yonghuId != ''">
+                and chongwujiyangYuyue.yonghu_id = #{params.yonghuId}
+            </if>
+            <if test=" params.chongwujiyangYuyueName != '' and params.chongwujiyangYuyueName != null and params.chongwujiyangYuyueName != 'null' ">
+                and chongwujiyangYuyue.chongwujiyang_yuyue_name like CONCAT('%',#{params.chongwujiyangYuyueName},'%')
+            </if>
+            <if test="params.chongwuTypes != null  and params.chongwuTypes != ''">
+                and chongwujiyangYuyue.chongwu_types = #{params.chongwuTypes}
+            </if>
+
+            <if test="params.chongwuZhongliangStart != null  and params.chongwuZhongliangStart != '' ">
+                <![CDATA[  and chongwujiyangYuyue.chongwu_zhongliang >= #{params.chongwuZhongliangStart}   ]]>
+            </if>
+            <if test="params.chongwuZhongliangEnd != null  and params.chongwuZhongliangEnd != '' ">
+                <![CDATA[  and chongwujiyangYuyue.chongwu_zhongliang <= #{params.chongwuZhongliangEnd}   ]]>
+            </if>
+            <if test="params.chongwuZhongliang != null  and params.chongwuZhongliang != '' ">
+                and chongwujiyangYuyue.chongwu_zhongliang = #{params.chongwuZhongliang}
+            </if>
+            <if test=" params.chongwujiyangYuyueTimeStart != '' and params.chongwujiyangYuyueTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(chongwujiyangYuyue.chongwujiyang_yuyue_time) >= UNIX_TIMESTAMP(#{params.chongwujiyangYuyueTimeStart}) ]]>
+            </if>
+            <if test=" params.chongwujiyangYuyueTimeEnd != '' and params.chongwujiyangYuyueTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(chongwujiyangYuyue.chongwujiyang_yuyue_time) <= UNIX_TIMESTAMP(#{params.chongwujiyangYuyueTimeEnd}) ]]>
+            </if>
+            <if test="params.chongwujiyangYuyueNumStart != null  and params.chongwujiyangYuyueNumStart != '' ">
+                <![CDATA[  and chongwujiyangYuyue.chongwujiyang_yuyue_num >= #{params.chongwujiyangYuyueNumStart}   ]]>
+            </if>
+            <if test="params.chongwujiyangYuyueNumEnd != null  and params.chongwujiyangYuyueNumEnd != '' ">
+                <![CDATA[  and chongwujiyangYuyue.chongwujiyang_yuyue_num <= #{params.chongwujiyangYuyueNumEnd}   ]]>
+            </if>
+            <if test="params.chongwujiyangYuyueNum != null  and params.chongwujiyangYuyueNum != '' ">
+                and chongwujiyangYuyue.chongwujiyang_yuyue_num = #{params.chongwujiyangYuyueNum}
+            </if>
+            <if test="params.shifouTypes != null  and params.shifouTypes != ''">
+                and chongwujiyangYuyue.shifou_types = #{params.shifouTypes}
+            </if>
+
+            <if test="params.chongwujiyangYuyuePriceStart != null ">
+                <![CDATA[  and chongwujiyangYuyue.chongwujiyang_yuyue_price >= #{params.chongwujiyangYuyuePriceStart}   ]]>
+            </if>
+            <if test="params.chongwujiyangYuyuePriceEnd != null ">
+                <![CDATA[  and chongwujiyangYuyue.chongwujiyang_yuyue_price <= #{params.chongwujiyangYuyuePriceEnd}   ]]>
+            </if>
+            <if test="params.chongwujiyangYuyueYesnoTypes != null  and params.chongwujiyangYuyueYesnoTypes != ''">
+                and chongwujiyangYuyue.chongwujiyang_yuyue_yesno_types = #{params.chongwujiyangYuyueYesnoTypes}
+            </if>
+
+            <if test=" params.chongwujiyangYuyueYesnoText != '' and params.chongwujiyangYuyueYesnoText != null and params.chongwujiyangYuyueYesnoText != 'null' ">
+                and chongwujiyangYuyue.chongwujiyang_yuyue_yesno_text like CONCAT('%',#{params.chongwujiyangYuyueYesnoText},'%')
+            </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(chongwujiyangYuyue.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(chongwujiyangYuyue.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>

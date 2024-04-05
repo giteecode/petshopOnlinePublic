@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.ChongwuyongpinDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.chongwuyongpin_name as chongwuyongpinName
+        ,a.chongwuyongpin_uuid_number as chongwuyongpinUuidNumber
+        ,a.chongwuyongpin_photo as chongwuyongpinPhoto
+        ,a.chongwuyongpin_types as chongwuyongpinTypes
+        ,a.chongwuyongpin_kucun_number as chongwuyongpinKucunNumber
+        ,a.chongwuyongpin_old_money as chongwuyongpinOldMoney
+        ,a.chongwuyongpin_new_money as chongwuyongpinNewMoney
+        ,a.chongwuyongpin_clicknum as chongwuyongpinClicknum
+        ,a.chongwuyongpin_content as chongwuyongpinContent
+        ,a.shangxia_types as shangxiaTypes
+        ,a.chongwuyongpin_delete as chongwuyongpinDelete
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.ChongwuyongpinView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM chongwuyongpin  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.chongwuyongpinName != '' and params.chongwuyongpinName != null and params.chongwuyongpinName != 'null' ">
+                and a.chongwuyongpin_name like CONCAT('%',#{params.chongwuyongpinName},'%')
+            </if>
+            <if test=" params.chongwuyongpinUuidNumber != '' and params.chongwuyongpinUuidNumber != null and params.chongwuyongpinUuidNumber != 'null' ">
+                and a.chongwuyongpin_uuid_number like CONCAT('%',#{params.chongwuyongpinUuidNumber},'%')
+            </if>
+            <if test="params.chongwuyongpinTypes != null and params.chongwuyongpinTypes != ''">
+                and a.chongwuyongpin_types = #{params.chongwuyongpinTypes}
+            </if>
+            <if test="params.chongwuyongpinKucunNumberStart != null and params.chongwuyongpinKucunNumberStart != ''">
+                <![CDATA[  and a.chongwuyongpin_kucun_number >= #{params.chongwuyongpinKucunNumberStart}   ]]>
+            </if>
+            <if test="params.chongwuyongpinKucunNumberEnd != null and params.chongwuyongpinKucunNumberEnd != ''">
+                <![CDATA[  and a.chongwuyongpin_kucun_number <= #{params.chongwuyongpinKucunNumberEnd}   ]]>
+            </if>
+             <if test="params.chongwuyongpinKucunNumber != null and params.chongwuyongpinKucunNumber != ''">
+                and a.chongwuyongpin_kucun_number = #{params.chongwuyongpinKucunNumber}
+             </if>
+            <if test="params.chongwuyongpinOldMoneyStart != null ">
+                <![CDATA[  and a.chongwuyongpin_old_money >= #{params.chongwuyongpinOldMoneyStart}   ]]>
+            </if>
+            <if test="params.chongwuyongpinOldMoneyEnd != null ">
+                <![CDATA[  and a.chongwuyongpin_old_money <= #{params.chongwuyongpinOldMoneyEnd}   ]]>
+            </if>
+            <if test="params.chongwuyongpinNewMoneyStart != null ">
+                <![CDATA[  and a.chongwuyongpin_new_money >= #{params.chongwuyongpinNewMoneyStart}   ]]>
+            </if>
+            <if test="params.chongwuyongpinNewMoneyEnd != null ">
+                <![CDATA[  and a.chongwuyongpin_new_money <= #{params.chongwuyongpinNewMoneyEnd}   ]]>
+            </if>
+            <if test="params.chongwuyongpinClicknumStart != null and params.chongwuyongpinClicknumStart != ''">
+                <![CDATA[  and a.chongwuyongpin_clicknum >= #{params.chongwuyongpinClicknumStart}   ]]>
+            </if>
+            <if test="params.chongwuyongpinClicknumEnd != null and params.chongwuyongpinClicknumEnd != ''">
+                <![CDATA[  and a.chongwuyongpin_clicknum <= #{params.chongwuyongpinClicknumEnd}   ]]>
+            </if>
+             <if test="params.chongwuyongpinClicknum != null and params.chongwuyongpinClicknum != ''">
+                and a.chongwuyongpin_clicknum = #{params.chongwuyongpinClicknum}
+             </if>
+            <if test=" params.chongwuyongpinContent != '' and params.chongwuyongpinContent != null and params.chongwuyongpinContent != 'null' ">
+                and a.chongwuyongpin_content like CONCAT('%',#{params.chongwuyongpinContent},'%')
+            </if>
+            <if test="params.shangxiaTypes != null and params.shangxiaTypes != ''">
+                and a.shangxia_types = #{params.shangxiaTypes}
+            </if>
+            <if test="params.chongwuyongpinDeleteStart != null and params.chongwuyongpinDeleteStart != ''">
+                <![CDATA[  and a.chongwuyongpin_delete >= #{params.chongwuyongpinDeleteStart}   ]]>
+            </if>
+            <if test="params.chongwuyongpinDeleteEnd != null and params.chongwuyongpinDeleteEnd != ''">
+                <![CDATA[  and a.chongwuyongpin_delete <= #{params.chongwuyongpinDeleteEnd}   ]]>
+            </if>
+             <if test="params.chongwuyongpinDelete != null and params.chongwuyongpinDelete != ''">
+                and a.chongwuyongpin_delete = #{params.chongwuyongpinDelete}
+             </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>
